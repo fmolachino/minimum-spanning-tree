@@ -9,8 +9,5 @@
         <module name="MST2" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="MST2" target="17" />
-    </bytecodeTargetLevel>
   </component>
 </project>

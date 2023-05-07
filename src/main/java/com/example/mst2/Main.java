@@ -23,12 +23,18 @@ public class Main extends Application {
     private Canvas canvas;
     private GraphicsContext gc;
     private static List<Point> points = new ArrayList<>();
+    private final int maxDistanceToNotChargeTax = 300;
+    private final double pricePerKm = 10.0;
+    private final double pricePerKmAbove300 = 12.0;
+    private final double diffProvinceTax = 500;
+
+    private double finalCostOfConnection;
 
     @Override
     public void start(Stage stage) throws Exception {
 
         // create a canvas and its graphics context
-        canvas = new Canvas(400, 400);
+        canvas = new Canvas(700, 700);
         gc = canvas.getGraphicsContext2D();
 
         // draw the border
@@ -58,11 +64,11 @@ public class Main extends Application {
             String localidad = localidadField.getText();
             String provincia = provinciaField.getText();
             // check if x and y are within the allowed range
-            if (x < 20 || x > 380 || y < 20 || y > 380) {
+            if (x < 20 || x > 680 || y < 20 || y > 680) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");
                 alert.setHeaderText("Coordenadas Invalidas");
-                alert.setContentText("Las coordenadas deben ser entre 20 y 380.");
+                alert.setContentText("Las coordenadas deben ser entre 20 y 680.");
                 alert.showAndWait();
                 return;
             }
@@ -75,7 +81,7 @@ public class Main extends Application {
             gc.setFill(Color.RED);
             for (Point p : points) {
                 gc.fillOval(p.getX(), p.getY(), 10, 10);
-                gc.fillText(p.getLocalidad() + ", " + p.getProvincia(), p.getX(), p.getY() - 10);
+                gc.fillText(p.getLocalidad() + ", " + p.getProvince(), p.getX(), p.getY() - 10);
             }
 
             if (points.size() > 1) {
@@ -134,27 +140,40 @@ public class Main extends Application {
                 lastPoint.getX(), lastPoint.getY(), secondLastPoint.getX(), secondLastPoint.getY(), distance);
     }
 
+    public double costForThisConnection(Point a, Point b, double distance){
+        double finalConnectionCost = 0;
+        if (a.getProvince().equals(b.getProvince())){
+            finalConnectionCost += diffProvinceTax;
+        }
+        if (distance < maxDistanceToNotChargeTax){
+            finalConnectionCost = finalConnectionCost + (distance*pricePerKm);
+        }
+        else finalConnectionCost = finalConnectionCost + (distance*pricePerKmAbove300);
+
+        return finalConnectionCost;
+    }
     private void minimumSpanningTree() {
         int numPoints = points.size();
         if (numPoints < 2) {
             System.out.println("Not enough points to calculate minimum spanning tree.");
             return;
         }
-        // create a 2D array to store the distances between points
-        double[][] distances = new double[numPoints][numPoints];
+        // create a 2D array to store the costPerConnection between points
+        double[][] costPerConnection = new double[numPoints][numPoints];
         for (int i = 0; i < numPoints; i++) {
             Point p1 = points.get(i);
             for (int j = i + 1; j < numPoints; j++) {
                 Point p2 = points.get(j);
                 double distance = Math.sqrt(Math.pow(p1.getX() - p2.getX(), 2) + Math.pow(p1.getY() - p2.getY(), 2));
-                distances[i][j] = distance;
-                distances[j][i] = distance;
+                double finalConnectionCost = costForThisConnection(p1,p2,distance);
+                costPerConnection[i][j] = finalConnectionCost;
+                costPerConnection[j][i] = finalConnectionCost;
             }
         }
-        // create an array to store the minimum distances from each point to the tree
-        double[] minDistances = new double[numPoints];
-        Arrays.fill(minDistances, Double.MAX_VALUE);
-        minDistances[0] = 0; // set the distance of the first point to 0
+        // create an array to store the minimum costPerConnection from each point to the tree
+        double[] minCost = new double[numPoints];
+        Arrays.fill(minCost, Double.MAX_VALUE);
+        minCost[0] = 0; // set the distance of the first point to 0
         // create an array to store the parent of each point in the tree
         int[] parents = new int[numPoints];
         Arrays.fill(parents, -1);
@@ -164,23 +183,37 @@ public class Main extends Application {
         for (int i = 0; i < numPoints - 1; i++) {
             // find the point with the minimum distance to the tree
             int minIndex = -1;
-            double minDistance = Double.MAX_VALUE;
+            double lowestCost = Double.MAX_VALUE;
             for (int j = 0; j < numPoints; j++) {
-                if (!addedPoints.contains(j) && minDistances[j] < minDistance) {
+                if (!addedPoints.contains(j) && minCost[j] < lowestCost) {
                     minIndex = j;
-                    minDistance = minDistances[j];
+                    lowestCost = minCost[j];
                 }
             }
-            // add the point to the tree and update the minimum distances and parents
+            // add the point to the tree and update the minimum costPerConnection and parents
             addedPoints.add(minIndex);
-            minDistances[minIndex] = Double.MAX_VALUE;
+            minCost[minIndex] = Double.MAX_VALUE;
             for (int j = 0; j < numPoints; j++) {
-                if (!addedPoints.contains(j) && minDistances[j] > distances[minIndex][j]) {
-                    minDistances[j] = distances[minIndex][j];
+                if (!addedPoints.contains(j) && minCost[j] > costPerConnection[minIndex][j]) {
+                    minCost[j] = costPerConnection[minIndex][j];
                     parents[j] = minIndex;
                 }
             }
         }
+
+        // calculate the total cost of the minimum spanning tree
+        double totalCost = 0;
+
+        for (int i = 1; i < numPoints; i++) {
+            Point p1 = points.get(i);
+            Point p2 = points.get(parents[i]);
+            double distance = Math.sqrt(Math.pow(p1.getX() - p2.getX(), 2) + Math.pow(p1.getY() - p2.getY(), 2));
+            double cost = costForThisConnection(p1, p2, distance);
+            totalCost += cost;
+            System.out.println("Costo total: " + totalCost);
+        }
+        System.out.println("Costo total: " + totalCost);
+
         // draw the minimum spanning tree
         gc.setStroke(Color.BLUE);
         for (int i = 1; i < numPoints; i++) {
@@ -188,6 +221,7 @@ public class Main extends Application {
             Point p2 = points.get(parents[i]);
             gc.strokeLine(p1.getX(), p1.getY(), p2.getX(), p2.getY());
         }
+
     }
 
     public static void main(String[] args) {
@@ -198,13 +232,13 @@ public class Main extends Application {
         private double x;
         private double y;
         private String localidad;
-        private String provincia;
+        private String province;
 
         public Point(double x, double y, String localidad, String provincia) {
             this.x = x;
             this.y = y;
             this.localidad = localidad;
-            this.provincia = provincia;
+            this.province = provincia;
         }
 
         public double getX() {
@@ -219,8 +253,8 @@ public class Main extends Application {
             return localidad;
         }
 
-        public String getProvincia() {
-            return provincia;
+        public String getProvince() {
+            return province;
         }
     }
 }
