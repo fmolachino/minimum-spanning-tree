@@ -18,7 +18,7 @@ public class Main extends Application {
         Controller controller = new Controller(model, view);
 
         controller.submitCity();
-        controller.searchMinimumThree(controller);
+        controller.searchMinimumThree();
         controller.initialiceTextFieldHolder();
 
         // create the scene and set it on the stage
@@ -26,6 +26,7 @@ public class Main extends Application {
         stage.setScene(scene);
         stage.show();
     }
+
 
     public static void main(String[] args) {
         launch(args);

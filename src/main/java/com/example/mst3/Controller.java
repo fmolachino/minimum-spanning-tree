@@ -23,9 +23,9 @@ public class Controller {
         //view.showTotalCost();
     }
 
-    public void searchMinimumThree(Controller controller) {
+    public void searchMinimumThree() {
         view.runButton.setOnAction(e -> {
-        model.minimumSpanningTree(view, controller);
+            model.minimumSpanningTree(view, this);
         });
     }
 
