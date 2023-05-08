@@ -1,8 +1,5 @@
 package com.example.mst3;
 
-
-import javafx.scene.paint.Color;
-
 import java.util.*;
 
 public class Model {
@@ -40,7 +37,7 @@ public class Model {
     }
 
 
-
+    //TODO minimumSpanningTree MUST BE Shorter- it kinda needs a rework, we should use more auxiliaries
     public void minimumSpanningTree(View view, Controller controller) {
         int numPoints = points.size();
         if (numPoints < 2) {
@@ -53,7 +50,7 @@ public class Model {
             Point p1 = points.get(i);
             for (int j = i + 1; j < numPoints; j++) {
                 Point p2 = points.get(j);
-                double distance = Math.sqrt(Math.pow(p1.getX() - p2.getX(), 2) + Math.pow(p1.getY() - p2.getY(), 2));
+                double distance = calculateDistance(p1, p2);
                 double finalConnectionCost = costForThisConnection(p1,p2,distance);
                 costPerConnection[i][j] = finalConnectionCost;
                 costPerConnection[j][i] = finalConnectionCost;
@@ -105,6 +102,11 @@ public class Model {
 
 
         controller.drawMST(points, numPoints, view, parents);
+    }
+
+    //Auxiliaries:
+    private double calculateDistance(Point p1, Point p2){
+        return Math.sqrt(Math.pow(p1.getX() - p2.getX(), 2) + Math.pow(p1.getY() - p2.getY(), 2));
     }
 
     public List<Point> getPoints(){
