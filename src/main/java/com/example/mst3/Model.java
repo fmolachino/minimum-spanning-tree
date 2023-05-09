@@ -46,11 +46,7 @@ public class Model {
     }
 
     private boolean checkTreeSize() {
-        if (points.size() < 2){
-            System.out.println("Not enough points to calculate minimum spanning tree.");
-            return true;
-        }
-        return false;
+        return points.size() < 2;
     }
 
     private double[][] createCostPerConnectionMatrix(int numPoints) {
@@ -135,7 +131,6 @@ public class Model {
                 throw new IllegalArgumentException("La ciudad ya se encuentra ingresada: " + point.getLocalidad() );
             }
         }
-        return;
     }
 
 }
