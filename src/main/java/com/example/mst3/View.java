@@ -16,7 +16,7 @@ import java.util.List;
 public class View {
 
     //---------class variables--------
-    private Canvas canvas;
+    private final Canvas canvas;
     private GraphicsContext gc;
     public Button runButton;
     public Button submitButton;
@@ -29,6 +29,9 @@ public class View {
     private Label localidadLabel;
     private Label provinciaLabel;
     private Label costoTotalLabel;
+    private Label costoPorKmLabel;
+    private Label porcentajeAumentoPorExcesoKmLabel;
+    private Label costoPorCruceProvinciaLabel;
     public VBox root;
 
 
@@ -40,16 +43,19 @@ public class View {
         this.gc = canvas.getGraphicsContext2D();
         drawBorder();
         this.submitButton = new Button("Submit");
-        this.xLabel = new Label("X: (20-380)");
+        this.xLabel = new Label("X: (20-680)");
         this.xField = new TextField();
-        this.yLabel = new Label("Y: (20-380)");
+        this.yLabel = new Label("Y: (20-680)");
         this.yField = new TextField();
         this.localidadLabel = new Label("Localidad:");
         this.localidadField = new TextField();
         this.provinciaLabel = new Label("Provincia:");
         this.provinciaField = new TextField();
-        this.costoTotalLabel = new Label("Costo Total MINIMO: ");
+        this.costoTotalLabel = new Label("Costo Total Minimo: ");
         this.runButton = new Button("Run!");
+        this.costoPorKmLabel = new Label("Costo por km inicial: 10.00");
+        this.porcentajeAumentoPorExcesoKmLabel = new Label("Aumento por conexion > 300.00km: 20%");
+        this.costoPorCruceProvinciaLabel = new Label("Costo fijo por cruce de provincias: 500.00");;
     }
 
 
@@ -63,7 +69,7 @@ public class View {
         }
     }
     public void setTotalCost(double totalCost) {
-        costoTotalLabel.setText("El costo total MíNIMO es de : " + totalCost);
+        costoTotalLabel.setText("Costo Total Minimo: " + totalCost);
     }
 
     private void drawBorder() {
@@ -112,6 +118,9 @@ public class View {
         inputGrid.addRow(2, localidadLabel, localidadField);
         inputGrid.addRow(3, provinciaLabel, provinciaField);
         inputGrid.addColumn(4, costoTotalLabel);
+        inputGrid.addRow(5, costoPorKmLabel);
+        inputGrid.addRow(6, porcentajeAumentoPorExcesoKmLabel);
+        inputGrid.addRow(7, costoPorCruceProvinciaLabel);
 
         // create a VBox to hold the input grid and the buttons
         VBox submitBox = new VBox(10, inputGrid, submitButton, runButton);

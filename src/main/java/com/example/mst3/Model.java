@@ -102,6 +102,7 @@ public class Model {
         }
     }
 
+    //calculate Final cost of the entire connection
     private double calculateTotalCost(int numPoints, List<Point> points, int[] parents) {
         double totalCost = 0;
         for (int i = 1; i < numPoints; i++) {
@@ -110,6 +111,7 @@ public class Model {
             double distance = calculateDistance(p1, p2);
             double cost = costForThisConnection(p1, p2, distance);
             totalCost += cost;
+            totalCost = Math.round(totalCost * 100.0) / 100.0;
         }
         return totalCost;
     }
