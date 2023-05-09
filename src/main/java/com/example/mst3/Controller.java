@@ -17,10 +17,14 @@ public class Controller {
     }
 
 
-    public void drawMST(List<Point> points, int numPoints, View view, int[] parents) {
+//    public void drawMST(List<Point> points, int numPoints, View view, int[] parents) {
+//        view.setColorAndDrawThree(points, numPoints, parents);
+//        //TODO view.showTotalCost();
+//        //view.showTotalCost();
+//    }
+    public void drawMST(List<Point> points, int numPoints, View view, int[] parents, double totalCost) {
         view.setColorAndDrawThree(points, numPoints, parents);
-        //TODO view.showTotalCost();
-        //view.showTotalCost();
+        view.setTotalCost(totalCost);
     }
 
     public void searchMinimumThree() {

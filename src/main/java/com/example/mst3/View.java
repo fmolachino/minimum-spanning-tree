@@ -28,11 +28,14 @@ public class View {
     private Label yLabel;
     private Label localidadLabel;
     private Label provinciaLabel;
+    private Label costoTotalLabel;
     public VBox root;
+
 
 
     //---------class constructor--------
     public View() {
+
         this.canvas = new Canvas(700, 700);
         this.gc = canvas.getGraphicsContext2D();
         drawBorder();
@@ -43,19 +46,24 @@ public class View {
         this.yField = new TextField();
         this.localidadLabel = new Label("Localidad:");
         this.localidadField = new TextField();
-        this. provinciaLabel = new Label("Provincia:");
+        this.provinciaLabel = new Label("Provincia:");
         this.provinciaField = new TextField();
+        this.costoTotalLabel = new Label("ferchu");
         this.runButton = new Button("Run!");
     }
 
 
     public void setColorAndDrawThree(List<Point> points, int numPoints, int[] parents) {
         this.gc.setStroke(Color.BLUE);
+
         for (int i = 1; i < numPoints; i++) {
             Point p1 = points.get(i);
             Point p2 = points.get(parents[i]);
             this.gc.strokeLine(p1.getX(), p1.getY(), p2.getX(), p2.getY());
         }
+    }
+    public void setTotalCost(double totalCost) {
+        costoTotalLabel.setText("Total cost: " + totalCost);
     }
 
 
@@ -104,6 +112,7 @@ public class View {
         inputGrid.addRow(1, yLabel, yField);
         inputGrid.addRow(2, localidadLabel, localidadField);
         inputGrid.addRow(3, provinciaLabel, provinciaField);
+        inputGrid.addRow(4, costoTotalLabel);
 
         // create a VBox to hold the input grid and the buttons
         VBox submitBox = new VBox(10, inputGrid, submitButton, runButton);
@@ -112,10 +121,7 @@ public class View {
         // create the root layout and add the canvas and submit box
         this.root = new VBox(10, canvas, submitBox);
         root.setAlignment(Pos.CENTER);
-
-
     }
-
 
     public double getX(){
         return Double.parseDouble(xField.getText());
@@ -124,6 +130,7 @@ public class View {
     public double getY(){
         return Double.parseDouble(yField.getText());
     }
+
     public String getLocalidad() {
         return localidadField.getText();
     }
@@ -131,4 +138,7 @@ public class View {
     public String getProvincia() {
         return provinciaField.getText();
     }
+
+
+
 }
