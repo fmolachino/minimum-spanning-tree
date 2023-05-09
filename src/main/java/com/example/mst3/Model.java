@@ -18,14 +18,15 @@ public class Model {
 
     public void addPoint(double x, double y, String city, String province){
         Point point = new Point(x, y, city, province);
+        checkIfExists(point);
         points.add(point);
     }
-
 
     public void minimumSpanningTree(View view, Controller controller) {
         if (checkTreeSize()) {
             return;
         }
+
         int numPoints = points.size();
         double[][] costPerConnection = createCostPerConnectionMatrix(numPoints);
         double[] minCost = new double[numPoints];
@@ -69,7 +70,7 @@ public class Model {
 
     public double costForThisConnection(Point a, Point b, double distance){
         double finalConnectionCost = 0;
-        if (a.getProvince().equals(b.getProvince())){
+        if (!a.getProvince().equals(b.getProvince())){
             finalConnectionCost += diffProvinceTax;
         }
         if (distance < maxDistanceToNotChargeTax){
@@ -111,9 +112,8 @@ public class Model {
             double distance = calculateDistance(p1, p2);
             double cost = costForThisConnection(p1, p2, distance);
             totalCost += cost;
-            totalCost = Math.round(totalCost * 100.0) / 100.0;
         }
-        return totalCost;
+        return Math.round(totalCost * 100.0) / 100.0;
     }
 
     //Auxiliaries:
@@ -127,6 +127,15 @@ public class Model {
 
     public int getPointsSize(){
         return this.points.size();
+    }
+
+    private void checkIfExists(Point point) {
+        for (Point p : points) {
+            if (p.getLocalidad().equals(point.getLocalidad())){
+                throw new IllegalArgumentException("La ciudad ya se encuentra ingresada: " + point.getLocalidad() );
+            }
+        }
+        return;
     }
 
 }

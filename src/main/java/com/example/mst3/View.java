@@ -147,6 +147,14 @@ public class View {
         return provinciaField.getText();
     }
 
+    /*public void alertMessage(String header, String body){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(header);
+        alert.setContentText(body);
+        alert.showAndWait();
+    }*/
+
 
 
 }
