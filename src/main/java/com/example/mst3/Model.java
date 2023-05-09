@@ -41,8 +41,6 @@ public class Model {
         }
 
         double totalCost = calculateTotalCost(numPoints, points, parents);
-//        System.out.println("Costo total: " + totalCost);
-//        controller.drawMST(points, numPoints, view, parents);
         controller.drawMST(points, numPoints, view, parents, totalCost);
     }
 

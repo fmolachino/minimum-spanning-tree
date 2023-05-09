@@ -63,9 +63,8 @@ public class View {
         }
     }
     public void setTotalCost(double totalCost) {
-        costoTotalLabel.setText("Total cost: " + totalCost);
+        costoTotalLabel.setText("El costo total MíNIMO es de : " + totalCost);
     }
-
 
     private void drawBorder() {
         double padding = 10;
