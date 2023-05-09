@@ -48,7 +48,7 @@ public class View {
         this.localidadField = new TextField();
         this.provinciaLabel = new Label("Provincia:");
         this.provinciaField = new TextField();
-        this.costoTotalLabel = new Label("ferchu");
+        this.costoTotalLabel = new Label("Costo Total MINIMO: ");
         this.runButton = new Button("Run!");
     }
 
@@ -111,7 +111,7 @@ public class View {
         inputGrid.addRow(1, yLabel, yField);
         inputGrid.addRow(2, localidadLabel, localidadField);
         inputGrid.addRow(3, provinciaLabel, provinciaField);
-        inputGrid.addRow(4, costoTotalLabel);
+        inputGrid.addColumn(4, costoTotalLabel);
 
         // create a VBox to hold the input grid and the buttons
         VBox submitBox = new VBox(10, inputGrid, submitButton, runButton);
