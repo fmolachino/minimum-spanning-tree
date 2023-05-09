@@ -105,6 +105,7 @@ public class View {
             alert.setHeaderText("Coordenadas Invalidas");
             alert.setContentText("Las coordenadas deben ser entre 20 y 680.");
             alert.showAndWait();
+            throw new IllegalArgumentException("Las coordenadas ingresadas no son validas.");
         }
     }
 
